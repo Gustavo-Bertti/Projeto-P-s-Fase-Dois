@@ -1,0 +1,24 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE Tipo (
+    IdTipo SERIAL PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Usuario (
+    IdUsuario UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    Nome VARCHAR(100) NOT NULL,
+    Email VARCHAR(150) UNIQUE NOT NULL,
+    IdTipo INTEGER NOT NULL,
+    FOREIGN KEY (IdTipo) REFERENCES Tipo(IdTipo)
+);
+
+CREATE TABLE Postagem (
+    IdPostagem UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    Titulo VARCHAR(200) NOT NULL,
+    Conteudo TEXT NOT NULL,
+    DataCriacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    DataAtualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    IdUsuario UUID NOT NULL,
+    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario)
+);

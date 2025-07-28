@@ -1,3 +1,5 @@
+import 'reflect-metadata'
+import '@/lib/typeorm/typeorm'
 import fastify from 'fastify'
 import { postagemRoutes } from '@/http/controllers/postagem/routes'
 import { globalErrorHandler } from '@/utils/global-error-handler'
