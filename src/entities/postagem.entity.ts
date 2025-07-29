@@ -1,15 +1,16 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 import { IPostagem } from "./model/postagem.interface"
+import { Usuario } from "./usuario.entity"
 
 @Entity({
-  name: "Postagem"
+  name: "postagem"
 })
 export class Postagem implements IPostagem {
-  @PrimaryGeneratedColumn("uuid", { name: "IdPostagem" })
+  @PrimaryGeneratedColumn("uuid", { name: "idpostagem" })
   id?: string
   
   @Column({
-    name: "Titulo",
+    name: "titulo",
     type: "varchar",
     length: 255,
     nullable: false
@@ -17,14 +18,14 @@ export class Postagem implements IPostagem {
   titulo: string
 
   @Column({
-    name: "Conteudo",
+    name: "conteudo",
     type: "text",
     nullable: false
   })
   conteudo: string
 
   @Column({
-    name: "DataCriacao",
+    name: "datacriacao",
     type: "timestamp",
     default: () => "CURRENT_TIMESTAMP",
     nullable: false
@@ -32,7 +33,7 @@ export class Postagem implements IPostagem {
   dataCriacao: Date
 
   @Column({
-    name: "DataAtualizacao",
+    name: "dataatualizacao",
     type: "timestamp",
     default: () => "CURRENT_TIMESTAMP",
     onUpdate: "CURRENT_TIMESTAMP",
@@ -40,22 +41,25 @@ export class Postagem implements IPostagem {
   })  
   dataAtualizacao?: Date
 
-  @Column({
-    name: "UsuarioId",
-    type: "uuid",
-    nullable: true
-  })
-  usuario_id?: string
+@ManyToOne(() => Usuario, usuario => usuario.postagens, { nullable: false, eager: true, onDelete: "CASCADE" })
+@JoinColumn({ name: "idusuario" }) 
+usuario: Usuario;
+
+@Column({ name: "idusuario", type: "uuid" })
+idUsuario: string;
+
 
   constructor(
-    titulo: string,
-    conteudo: string,
-    dataCriacao: Date,
-    dataAtualizacao: Date,
-  ) {
-    this.titulo = titulo
-    this.conteudo = conteudo
-    this.dataCriacao = dataCriacao
-    this.dataAtualizacao = dataAtualizacao
+  titulo: string,
+  conteudo: string,
+  usuario: Usuario | string,
+) {
+  this.titulo = titulo
+  this.conteudo = conteudo
+  if (typeof usuario === "string") {
+    this.idUsuario = usuario
+  } else {
+    this.usuario = usuario
   }
+}
 }

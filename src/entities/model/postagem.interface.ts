@@ -2,7 +2,7 @@ export interface IPostagem {
   id?: string
   titulo: string
   conteudo: string
-  dataCriacao: Date
+  dataCriacao?: Date
   dataAtualizacao?: Date
-  usuario_id?: string
+  idUsuario?: string
 }

@@ -1,10 +1,10 @@
-import { Postagem } from '@/entities/postagem.entity'
-import { PostagemRepository } from '@/repositories/postagem.repository'
+import { IPostagem } from "@/entities/model/postagem.interface";
+import { IPostagemRepository } from "@/repositories/postagem.repository.interface";
 
-export class CreatePostagemUseCase {
-  constructor(private postagemRepository: PostagemRepository) {}
+export class CreatePostagemUseCase{
+  constructor(private postagemRepository: IPostagemRepository) {}
 
-  handler(postagem: Postagem) {
-    return this.postagemRepository.create(postagem)
+  async handler(postagem: IPostagem): Promise<IPostagem> {
+    return this.postagemRepository.create(postagem);
   }
 }
