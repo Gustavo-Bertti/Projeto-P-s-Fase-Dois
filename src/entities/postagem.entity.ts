@@ -41,6 +41,14 @@ export class Postagem implements IPostagem {
   })  
   dataAtualizacao?: Date
 
+  @Column({
+    name: "ativo",
+    type: "boolean",
+    default: true,
+    nullable: false
+  })
+  ativo?: boolean
+
 @ManyToOne(() => Usuario, usuario => usuario.postagens, { nullable: false, eager: true, onDelete: "CASCADE" })
 @JoinColumn({ name: "idusuario" }) 
 usuario: Usuario;

@@ -12,13 +12,26 @@ CREATE TABLE Usuario (
     IdTipo INTEGER NOT NULL,
     FOREIGN KEY (IdTipo) REFERENCES Tipo(IdTipo)
 );
-
 CREATE TABLE Postagem (
     IdPostagem UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     Titulo VARCHAR(200) NOT NULL,
     Conteudo TEXT NOT NULL,
     DataCriacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     DataAtualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Ativo BOOLEAN DEFAULT TRUE,
     IdUsuario UUID NOT NULL,
     FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario)
 );
+INSERT INTO Tipo (Nome) VALUES ('PROFESSOR')
+    ON CONFLICT DO NOTHING;
+
+INSERT INTO Tipo (Nome) VALUES ('ALUNO')
+    ON CONFLICT DO NOTHING;
+
+INSERT INTO Usuario (Nome, Email, IdTipo)
+VALUES (
+    'João Silva',
+    'joao.silva@example.com',
+    (SELECT IdTipo FROM Tipo WHERE Nome = 'PROFESSOR')
+)
+ON CONFLICT (Email) DO NOTHING;

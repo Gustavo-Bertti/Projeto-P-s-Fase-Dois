@@ -4,5 +4,6 @@ export interface IPostagem {
   conteudo: string
   dataCriacao?: Date
   dataAtualizacao?: Date
+  ativo?: boolean
   idUsuario?: string
 }
