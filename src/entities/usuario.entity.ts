@@ -7,7 +7,7 @@ import { Postagem } from "./postagem.entity"
   name: "usuario"
 })
 export class Usuario implements IUsuario {
-  @PrimaryGeneratedColumn("uuid", { name: "Idusuario" })
+  @PrimaryGeneratedColumn("uuid", { name: "idusuario" })
   id?: string
   @Column({
     name: "nome",

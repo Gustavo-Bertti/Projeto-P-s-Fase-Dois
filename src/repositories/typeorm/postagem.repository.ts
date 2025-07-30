@@ -11,8 +11,21 @@ export class PostagemRepository implements IPostagemRepository {
     constructor () {
         this.repository = appDataSource.getRepository(Postagem);
     }
-
+    async findByAllPosts(page: number, limit: number): Promise<IPostagem[]> {
+        return await this.repository.find({
+            relations:['usuario'],
+            skip: (page - 1) * limit,
+            take: limit,
+            where:{ativo:true}
+        })
+    }
+    async findById(id: string): Promise<IPostagem | null> {
+        return await this.repository.findOne({
+            where: { id },
+            relations: ['usuario']
+        });
+    }
     async create(postagem: IPostagem): Promise<IPostagem> {
-       return this.repository.save(postagem);
+       return await this.repository.save(postagem);
     }
 }
