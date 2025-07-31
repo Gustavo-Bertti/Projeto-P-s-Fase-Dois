@@ -28,4 +28,13 @@ export class PostagemRepository implements IPostagemRepository {
     async create(postagem: IPostagem): Promise<IPostagem> {
        return await this.repository.save(postagem);
     }
+
+    async update(id: string, postagem: IPostagem): Promise<IPostagem | null> {
+        const existingPostagem = await this.repository.findOne({ where: { id } });
+        if (!existingPostagem) {
+            return null;
+        }
+        Object.assign(existingPostagem, postagem);
+        return await this.repository.save(existingPostagem);
+    }
 }

@@ -5,7 +5,7 @@ export class FindByIdUseCase{
     constructor(private postagemRepository: IPostagemRepository) {}
 
     async handler(id: string) {
-        const post =  this.postagemRepository.findById(id);
+        const post = await this.postagemRepository.findById(id);
 
         if(!post)throw new ResourceNotFoundError()
 

@@ -5,6 +5,6 @@ export class CreatePostagemUseCase{
   constructor(private postagemRepository: IPostagemRepository) {}
 
   async handler(postagem: IPostagem): Promise<IPostagem> {
-    return this.postagemRepository.create(postagem);
+    return await this.postagemRepository.create(postagem);
   }
 }
