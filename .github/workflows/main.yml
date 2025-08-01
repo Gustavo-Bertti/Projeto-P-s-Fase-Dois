@@ -27,13 +27,10 @@ jobs:
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "DB_SSL=require" >> .env
 
-      - name: Login no Docker Hub
-        run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-
       - name: Build e Push da imagem
         run: |
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-          docker buildx build -f ../../Dockerfile -t $DOCKER_USERNAME/segunda-entrega:latest --push
+          docker buildx build -f ../../Dockerfile -t $DOCKER_USERNAME/segunda-entrega:latest ../../ --push
 
 
 
