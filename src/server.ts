@@ -1,11 +1,10 @@
 import { env } from '@/env'
 import { app } from '@/app'
-
-app
-  .listen({
-    host: '0.0.0.0',
-    port: env.PORT,
-  })
+const port = Number(process.env.PORT) || 3000;
+app.listen({ host: '0.0.0.0', port })
   .then(() => {
-    console.log('Servidor está rodando no link http://localhost:' + env.PORT)
+    console.log(`Servidor rodando em http://localhost:${port}`);
   })
+  .catch((err) => {
+    console.error('Erro ao iniciar servidor:', err);
+  });
