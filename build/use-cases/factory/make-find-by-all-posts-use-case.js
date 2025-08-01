@@ -1,9 +1,7 @@
 "use strict";
-var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -17,14 +15,6 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var __decorateClass = (decorators, target, key, kind) => {
   var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
@@ -35,12 +25,12 @@ var __decorateClass = (decorators, target, key, kind) => {
   return result;
 };
 
-// src/http/controllers/postagem/create.ts
-var create_exports = {};
-__export(create_exports, {
-  create: () => create
+// src/use-cases/factory/make-find-by-all-posts-use-case.ts
+var make_find_by_all_posts_use_case_exports = {};
+__export(make_find_by_all_posts_use_case_exports, {
+  makeFindByAllPostsUseCase: () => makeFindByAllPostsUseCase
 });
-module.exports = __toCommonJS(create_exports);
+module.exports = __toCommonJS(make_find_by_all_posts_use_case_exports);
 
 // src/entities/postagem.entity.ts
 var import_typeorm3 = require("typeorm");
@@ -259,41 +249,24 @@ var PostagemRepository = class {
   }
 };
 
-// src/use-cases/create-postagem.ts
-var CreatePostagemUseCase = class {
+// src/use-cases/find-by-all-posts.ts
+var FindByAllPostsUseCase = class {
   constructor(postagemRepository) {
     this.postagemRepository = postagemRepository;
   }
-  async handler(postagem) {
-    return await this.postagemRepository.create(postagem);
+  async handler(page, limit) {
+    return await this.postagemRepository.findByAllPosts(page, limit);
   }
 };
 
-// src/use-cases/factory/make-create-postagem-use-case.ts
-function makeCreatePostagemUseCase() {
+// src/use-cases/factory/make-find-by-all-posts-use-case.ts
+console.log("Factory carregada", FindByAllPostsUseCase);
+function makeFindByAllPostsUseCase() {
   const postagemRepository = new PostagemRepository();
-  const createPostagemUseCase = new CreatePostagemUseCase(postagemRepository);
-  return createPostagemUseCase;
-}
-
-// src/http/controllers/postagem/create.ts
-var import_zod2 = __toESM(require("zod"));
-async function create(request, reply) {
-  const registerBodySchema = import_zod2.default.object({
-    titulo: import_zod2.default.string().min(1, "T\xEDtulo \xE9 obrigat\xF3rio"),
-    conteudo: import_zod2.default.string().min(1, "Conte\xFAdo \xE9 obrigat\xF3rio"),
-    idUsuario: import_zod2.default.string().uuid()
-  });
-  const { titulo, conteudo, idUsuario } = registerBodySchema.parse(request.body);
-  const createPostagemUseCase = makeCreatePostagemUseCase();
-  const postagem = await createPostagemUseCase.handler({
-    titulo,
-    conteudo,
-    idUsuario
-  });
-  return reply.status(201).send(postagem);
+  const findByAllPostsUseCase = new FindByAllPostsUseCase(postagemRepository);
+  return findByAllPostsUseCase;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  create
+  makeFindByAllPostsUseCase
 });

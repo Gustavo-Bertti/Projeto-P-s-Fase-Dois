@@ -35,36 +35,12 @@ var __decorateClass = (decorators, target, key, kind) => {
   return result;
 };
 
-// src/app.ts
-var app_exports = {};
-__export(app_exports, {
-  app: () => app
+// src/http/controllers/postagem/update.ts
+var update_exports = {};
+__export(update_exports, {
+  update: () => update
 });
-module.exports = __toCommonJS(app_exports);
-var import_reflect_metadata = require("reflect-metadata");
-
-// src/lib/typeorm/typeorm.ts
-var import_typeorm4 = require("typeorm");
-
-// src/env/index.ts
-var import_config = require("dotenv/config");
-var import_zod = require("zod");
-var envSchema = import_zod.z.object({
-  ENV: import_zod.z.enum(["development", "production", "test"]).default("development"),
-  PORT: import_zod.z.coerce.number().default(3e3),
-  DB_HOST: import_zod.z.string().default("localhost"),
-  DB_PORT: import_zod.z.coerce.number().default(5432),
-  DB_USER: import_zod.z.string().default("postgres"),
-  DB_PASSWORD: import_zod.z.string().default("postgres"),
-  DB_NAME: import_zod.z.string().default("projeto_segundo_modulo"),
-  DB_SSL: import_zod.z.enum(["disable", "require"]).default("disable")
-});
-var _env = envSchema.safeParse(process.env);
-if (!_env.success) {
-  console.error("Invalid enviroment variables", _env.error.format());
-  throw new Error("Invalid enviroment variables");
-}
-var env = _env.data;
+module.exports = __toCommonJS(update_exports);
 
 // src/entities/postagem.entity.ts
 var import_typeorm3 = require("typeorm");
@@ -212,6 +188,29 @@ Postagem = __decorateClass([
 ], Postagem);
 
 // src/lib/typeorm/typeorm.ts
+var import_typeorm4 = require("typeorm");
+
+// src/env/index.ts
+var import_config = require("dotenv/config");
+var import_zod = require("zod");
+var envSchema = import_zod.z.object({
+  ENV: import_zod.z.enum(["development", "production", "test"]).default("development"),
+  PORT: import_zod.z.coerce.number().default(3e3),
+  DB_HOST: import_zod.z.string().default("localhost"),
+  DB_PORT: import_zod.z.coerce.number().default(5432),
+  DB_USER: import_zod.z.string().default("postgres"),
+  DB_PASSWORD: import_zod.z.string().default("postgres"),
+  DB_NAME: import_zod.z.string().default("projeto_segundo_modulo"),
+  DB_SSL: import_zod.z.enum(["disable", "require"]).default("disable")
+});
+var _env = envSchema.safeParse(process.env);
+if (!_env.success) {
+  console.error("Invalid enviroment variables", _env.error.format());
+  throw new Error("Invalid enviroment variables");
+}
+var env = _env.data;
+
+// src/lib/typeorm/typeorm.ts
 var appDataSource = new import_typeorm4.DataSource({
   type: "postgres",
   host: env.DB_HOST,
@@ -227,9 +226,6 @@ appDataSource.initialize().then(() => {
 }).catch((error) => {
   console.error("Error connecting to the Data Base with TypeORM:", error);
 });
-
-// src/app.ts
-var import_fastify = __toESM(require("fastify"));
 
 // src/repositories/typeorm/postagem.repository.ts
 var PostagemRepository = class {
@@ -263,109 +259,12 @@ var PostagemRepository = class {
   }
 };
 
-// src/use-cases/create-postagem.ts
-var CreatePostagemUseCase = class {
-  constructor(postagemRepository) {
-    this.postagemRepository = postagemRepository;
-  }
-  async handler(postagem) {
-    return await this.postagemRepository.create(postagem);
-  }
-};
-
-// src/use-cases/factory/make-create-postagem-use-case.ts
-function makeCreatePostagemUseCase() {
-  const postagemRepository = new PostagemRepository();
-  const createPostagemUseCase = new CreatePostagemUseCase(postagemRepository);
-  return createPostagemUseCase;
-}
-
-// src/http/controllers/postagem/create.ts
-var import_zod2 = __toESM(require("zod"));
-async function create(request, reply) {
-  const registerBodySchema = import_zod2.default.object({
-    titulo: import_zod2.default.string().min(1, "T\xEDtulo \xE9 obrigat\xF3rio"),
-    conteudo: import_zod2.default.string().min(1, "Conte\xFAdo \xE9 obrigat\xF3rio"),
-    idUsuario: import_zod2.default.string().uuid()
-  });
-  const { titulo, conteudo, idUsuario } = registerBodySchema.parse(request.body);
-  const createPostagemUseCase = makeCreatePostagemUseCase();
-  const postagem = await createPostagemUseCase.handler({
-    titulo,
-    conteudo,
-    idUsuario
-  });
-  return reply.status(201).send(postagem);
-}
-
-// src/use-cases/find-by-all-posts.ts
-var FindByAllPostsUseCase = class {
-  constructor(postagemRepository) {
-    this.postagemRepository = postagemRepository;
-  }
-  async handler(page, limit) {
-    return await this.postagemRepository.findByAllPosts(page, limit);
-  }
-};
-
-// src/use-cases/factory/make-find-by-all-posts-use-case.ts
-console.log("Factory carregada", FindByAllPostsUseCase);
-function makeFindByAllPostsUseCase() {
-  const postagemRepository = new PostagemRepository();
-  const findByAllPostsUseCase = new FindByAllPostsUseCase(postagemRepository);
-  return findByAllPostsUseCase;
-}
-
-// src/http/controllers/postagem/findByAllPosts.ts
-var import_zod3 = __toESM(require("zod"));
-async function findByAllPosts(request, reply) {
-  const registerQueryShcema = import_zod3.default.object({
-    page: import_zod3.default.coerce.number().default(1),
-    limit: import_zod3.default.coerce.number().default(10)
-  });
-  const { page, limit } = registerQueryShcema.parse(request.params);
-  const findByAllPosts2 = makeFindByAllPostsUseCase();
-  const posts = await findByAllPosts2.handler(page, limit);
-  return reply.status(200).send(posts);
-}
-
 // src/use-cases/errors/resource-not-found-error.ts
 var ResourceNotFoundError = class extends Error {
   constructor() {
     super("Resource not found");
   }
 };
-
-// src/use-cases/find-by-id.ts
-var FindByIdUseCase = class {
-  constructor(postagemRepository) {
-    this.postagemRepository = postagemRepository;
-  }
-  async handler(id) {
-    const post = await this.postagemRepository.findById(id);
-    if (!post) throw new ResourceNotFoundError();
-    return post;
-  }
-};
-
-// src/use-cases/factory/make-find-by-id-use-case.ts
-function makeFindByIdUseCase() {
-  const postagemRepository = new PostagemRepository();
-  const findByIdUseCase = new FindByIdUseCase(postagemRepository);
-  return findByIdUseCase;
-}
-
-// src/http/controllers/postagem/findById.ts
-var import_zod4 = __toESM(require("zod"));
-async function findById(request, reply) {
-  const registerBodySchema = import_zod4.default.object({
-    id: import_zod4.default.string().uuid("ID inv\xE1lido")
-  });
-  const { id } = registerBodySchema.parse(request.params);
-  const findByIdUseCase = makeFindByIdUseCase();
-  const post = await findByIdUseCase.handler(id);
-  return reply.status(200).send(post);
-}
 
 // src/use-cases/update-postagem.ts
 var UpdatePostagemUseCase = class {
@@ -387,15 +286,15 @@ function makeUpdatePostagemUseCase() {
 }
 
 // src/http/controllers/postagem/update.ts
-var import_zod5 = __toESM(require("zod"));
+var import_zod2 = __toESM(require("zod"));
 async function update(request, reply) {
   const id = request.params;
-  const registerBodySchema = import_zod5.default.object({
-    titulo: import_zod5.default.string().min(1, "T\xEDtulo \xE9 obrigat\xF3rio"),
-    conteudo: import_zod5.default.string().min(1, "Conte\xFAdo \xE9 obrigat\xF3rio")
+  const registerBodySchema = import_zod2.default.object({
+    titulo: import_zod2.default.string().min(1, "T\xEDtulo \xE9 obrigat\xF3rio"),
+    conteudo: import_zod2.default.string().min(1, "Conte\xFAdo \xE9 obrigat\xF3rio")
   });
-  const registerParamsSchema = import_zod5.default.object({
-    id: import_zod5.default.string().uuid("ID inv\xE1lido")
+  const registerParamsSchema = import_zod2.default.object({
+    id: import_zod2.default.string().uuid("ID inv\xE1lido")
   });
   const { titulo, conteudo } = registerBodySchema.parse(request.body);
   const { id: postagemId } = registerParamsSchema.parse(request.params);
@@ -403,39 +302,7 @@ async function update(request, reply) {
   const updatedPostagem = await updatePostagemUseCase.handler(postagemId, { titulo, conteudo });
   return reply.status(200).send(updatedPostagem);
 }
-
-// src/http/controllers/postagem/routes.ts
-async function postagemRoutes(app2) {
-  app2.get("/postagem", findByAllPosts);
-  app2.get("/postagem/:id", findById);
-  app2.post("/postagem", create);
-  app2.put("/postagem/:id", update);
-}
-
-// src/utils/global-error-handler.ts
-var import_zod6 = require("zod");
-var errorHandlerMap = {
-  ZodError: (error, request, reply) => {
-    return reply.status(400).send({ message: "Validation error", ...error instanceof import_zod6.ZodError && { error: error.message } });
-  },
-  ResourceNotFoundError: (error, request, reply) => {
-    return reply.status(404).send({ message: error.message });
-  }
-};
-var globalErrorHandler = (error, _, reply) => {
-  if (env.NODE_ENV === "development") {
-    console.error(error);
-  }
-  const handler = errorHandlerMap[error.constructor.name];
-  if (handler) return handler(error, _, reply);
-  return reply.status(500).send({ message: "Internal Server Error" });
-};
-
-// src/app.ts
-var app = (0, import_fastify.default)();
-app.register(postagemRoutes);
-app.setErrorHandler(globalErrorHandler);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  app
+  update
 });

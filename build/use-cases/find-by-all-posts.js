@@ -17,21 +17,21 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/use-cases/create-postagem.ts
-var create_postagem_exports = {};
-__export(create_postagem_exports, {
-  CreatePostagemUseCase: () => CreatePostagemUseCase
+// src/use-cases/find-by-all-posts.ts
+var find_by_all_posts_exports = {};
+__export(find_by_all_posts_exports, {
+  FindByAllPostsUseCase: () => FindByAllPostsUseCase
 });
-module.exports = __toCommonJS(create_postagem_exports);
-var CreatePostagemUseCase = class {
+module.exports = __toCommonJS(find_by_all_posts_exports);
+var FindByAllPostsUseCase = class {
   constructor(postagemRepository) {
     this.postagemRepository = postagemRepository;
   }
-  async handler(postagem) {
-    return await this.postagemRepository.create(postagem);
+  async handler(page, limit) {
+    return await this.postagemRepository.findByAllPosts(page, limit);
   }
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  CreatePostagemUseCase
+  FindByAllPostsUseCase
 });

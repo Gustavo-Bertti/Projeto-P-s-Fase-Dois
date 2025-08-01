@@ -17,21 +17,18 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/use-cases/create-postagem.ts
-var create_postagem_exports = {};
-__export(create_postagem_exports, {
-  CreatePostagemUseCase: () => CreatePostagemUseCase
+// src/use-cases/errors/resource-not-found-error.ts
+var resource_not_found_error_exports = {};
+__export(resource_not_found_error_exports, {
+  ResourceNotFoundError: () => ResourceNotFoundError
 });
-module.exports = __toCommonJS(create_postagem_exports);
-var CreatePostagemUseCase = class {
-  constructor(postagemRepository) {
-    this.postagemRepository = postagemRepository;
-  }
-  async handler(postagem) {
-    return await this.postagemRepository.create(postagem);
+module.exports = __toCommonJS(resource_not_found_error_exports);
+var ResourceNotFoundError = class extends Error {
+  constructor() {
+    super("Resource not found");
   }
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  CreatePostagemUseCase
+  ResourceNotFoundError
 });

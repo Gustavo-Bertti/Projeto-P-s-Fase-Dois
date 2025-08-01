@@ -26,5 +26,8 @@ jobs:
       - name: Build Docker image
         run: docker build -t meu-app .
 
-      - name: Run container
-        run: docker run --rm --env-file .env meu-app
+      - name: Start server with test and timeout
+        run: |
+            docker run --rm --env-file .env meu-app sh -c "
+            timeout 20s sh -c 'npm start & sleep 5 && npm run test-ci'
+            "

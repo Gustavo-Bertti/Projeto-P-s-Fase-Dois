@@ -6,13 +6,13 @@ import { Tipo } from "@/entities/tipo.entity";
 
 export const appDataSource = new DataSource({
     type: "postgres",
-    host: env.DATABASE_HOST,
-    port: env.DATABASE_PORT,
-    username: env.DATABASE_USER,
-    password: env.DATABASE_PASSWORD,
-    database: env.DATABASE_NAME,
+    host: env.DB_HOST,
+    port: env.DB_PORT,
+    username: env.DB_USER,
+    password: env.DB_PASSWORD,
+    database: env.DB_NAME,
     entities:[Postagem,Usuario,Tipo],
-    logging: env.NODE_ENV === 'development',
+    logging: env.ENV === 'development',
 })
 
 appDataSource.initialize()

@@ -1,9 +1,7 @@
 "use strict";
-var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -17,14 +15,6 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var __decorateClass = (decorators, target, key, kind) => {
   var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
@@ -35,12 +25,33 @@ var __decorateClass = (decorators, target, key, kind) => {
   return result;
 };
 
-// src/http/controllers/postagem/create.ts
-var create_exports = {};
-__export(create_exports, {
-  create: () => create
+// src/lib/typeorm/typeorm.ts
+var typeorm_exports = {};
+__export(typeorm_exports, {
+  appDataSource: () => appDataSource
 });
-module.exports = __toCommonJS(create_exports);
+module.exports = __toCommonJS(typeorm_exports);
+var import_typeorm4 = require("typeorm");
+
+// src/env/index.ts
+var import_config = require("dotenv/config");
+var import_zod = require("zod");
+var envSchema = import_zod.z.object({
+  ENV: import_zod.z.enum(["development", "production", "test"]).default("development"),
+  PORT: import_zod.z.coerce.number().default(3e3),
+  DB_HOST: import_zod.z.string().default("localhost"),
+  DB_PORT: import_zod.z.coerce.number().default(5432),
+  DB_USER: import_zod.z.string().default("postgres"),
+  DB_PASSWORD: import_zod.z.string().default("postgres"),
+  DB_NAME: import_zod.z.string().default("projeto_segundo_modulo"),
+  DB_SSL: import_zod.z.enum(["disable", "require"]).default("disable")
+});
+var _env = envSchema.safeParse(process.env);
+if (!_env.success) {
+  console.error("Invalid enviroment variables", _env.error.format());
+  throw new Error("Invalid enviroment variables");
+}
+var env = _env.data;
 
 // src/entities/postagem.entity.ts
 var import_typeorm3 = require("typeorm");
@@ -188,29 +199,6 @@ Postagem = __decorateClass([
 ], Postagem);
 
 // src/lib/typeorm/typeorm.ts
-var import_typeorm4 = require("typeorm");
-
-// src/env/index.ts
-var import_config = require("dotenv/config");
-var import_zod = require("zod");
-var envSchema = import_zod.z.object({
-  ENV: import_zod.z.enum(["development", "production", "test"]).default("development"),
-  PORT: import_zod.z.coerce.number().default(3e3),
-  DB_HOST: import_zod.z.string().default("localhost"),
-  DB_PORT: import_zod.z.coerce.number().default(5432),
-  DB_USER: import_zod.z.string().default("postgres"),
-  DB_PASSWORD: import_zod.z.string().default("postgres"),
-  DB_NAME: import_zod.z.string().default("projeto_segundo_modulo"),
-  DB_SSL: import_zod.z.enum(["disable", "require"]).default("disable")
-});
-var _env = envSchema.safeParse(process.env);
-if (!_env.success) {
-  console.error("Invalid enviroment variables", _env.error.format());
-  throw new Error("Invalid enviroment variables");
-}
-var env = _env.data;
-
-// src/lib/typeorm/typeorm.ts
 var appDataSource = new import_typeorm4.DataSource({
   type: "postgres",
   host: env.DB_HOST,
@@ -226,74 +214,7 @@ appDataSource.initialize().then(() => {
 }).catch((error) => {
   console.error("Error connecting to the Data Base with TypeORM:", error);
 });
-
-// src/repositories/typeorm/postagem.repository.ts
-var PostagemRepository = class {
-  constructor() {
-    this.repository = appDataSource.getRepository(Postagem);
-  }
-  async findByAllPosts(page, limit) {
-    return await this.repository.find({
-      relations: ["usuario"],
-      skip: (page - 1) * limit,
-      take: limit,
-      where: { ativo: true }
-    });
-  }
-  async findById(id) {
-    return await this.repository.findOne({
-      where: { id },
-      relations: ["usuario"]
-    });
-  }
-  async create(postagem) {
-    return await this.repository.save(postagem);
-  }
-  async update(id, postagem) {
-    const existingPostagem = await this.repository.findOne({ where: { id } });
-    if (!existingPostagem) {
-      return null;
-    }
-    Object.assign(existingPostagem, postagem);
-    return await this.repository.save(existingPostagem);
-  }
-};
-
-// src/use-cases/create-postagem.ts
-var CreatePostagemUseCase = class {
-  constructor(postagemRepository) {
-    this.postagemRepository = postagemRepository;
-  }
-  async handler(postagem) {
-    return await this.postagemRepository.create(postagem);
-  }
-};
-
-// src/use-cases/factory/make-create-postagem-use-case.ts
-function makeCreatePostagemUseCase() {
-  const postagemRepository = new PostagemRepository();
-  const createPostagemUseCase = new CreatePostagemUseCase(postagemRepository);
-  return createPostagemUseCase;
-}
-
-// src/http/controllers/postagem/create.ts
-var import_zod2 = __toESM(require("zod"));
-async function create(request, reply) {
-  const registerBodySchema = import_zod2.default.object({
-    titulo: import_zod2.default.string().min(1, "T\xEDtulo \xE9 obrigat\xF3rio"),
-    conteudo: import_zod2.default.string().min(1, "Conte\xFAdo \xE9 obrigat\xF3rio"),
-    idUsuario: import_zod2.default.string().uuid()
-  });
-  const { titulo, conteudo, idUsuario } = registerBodySchema.parse(request.body);
-  const createPostagemUseCase = makeCreatePostagemUseCase();
-  const postagem = await createPostagemUseCase.handler({
-    titulo,
-    conteudo,
-    idUsuario
-  });
-  return reply.status(201).send(postagem);
-}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  create
+  appDataSource
 });

@@ -17,28 +17,32 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/repositories/postagem.repository.ts
-var postagem_repository_exports = {};
-__export(postagem_repository_exports, {
-  PostagemRepository: () => PostagemRepository
+// src/use-cases/update-postagem.ts
+var update_postagem_exports = {};
+__export(update_postagem_exports, {
+  UpdatePostagemUseCase: () => UpdatePostagemUseCase
 });
-module.exports = __toCommonJS(postagem_repository_exports);
-var PostagemRepository = class {
-  async findById(id) {
-    return {
-      id,
-      titulo: "Teste",
-      conteudo: "Muito conteudo",
-      dataAtualizacao: /* @__PURE__ */ new Date("15/07/2025"),
-      dataCriacao: /* @__PURE__ */ new Date("15/07/2025"),
-      usuario_id: 1
-    };
+module.exports = __toCommonJS(update_postagem_exports);
+
+// src/use-cases/errors/resource-not-found-error.ts
+var ResourceNotFoundError = class extends Error {
+  constructor() {
+    super("Resource not found");
   }
-  async create(postagem) {
-    return postagem;
+};
+
+// src/use-cases/update-postagem.ts
+var UpdatePostagemUseCase = class {
+  constructor(postagemRepository) {
+    this.postagemRepository = postagemRepository;
+  }
+  async handler(id, postagem) {
+    const postagemExisting = await this.postagemRepository.update(id, postagem);
+    if (!postagemExisting) throw new ResourceNotFoundError();
+    return postagemExisting;
   }
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  PostagemRepository
+  UpdatePostagemUseCase
 });
