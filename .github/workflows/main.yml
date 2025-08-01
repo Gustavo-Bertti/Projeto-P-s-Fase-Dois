@@ -10,18 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Build and push Docker image
-        run: |
-          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-          docker build -t $DOCKER_USERNAME/segunda-entrega:latest .
-          docker push $DOCKER_USERNAME/segunda-entrega:latest
 
       - name: Criar arquivo .env a partir dos Secrets
         run: |
@@ -33,15 +27,21 @@ jobs:
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "DB_SSL=require" >> .env
 
-      - name: Build Docker image
-        run: docker build -t meu-app .
+      - name: Login no Docker Hub
+        run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
-      - name: List build folder
+      - name: Build e Push da imagem
         run: |
-          docker run --rm meu-app ls -l /app/build
+          docker buildx build . \
+            -t $DOCKER_USERNAME/segunda-entrega:latest \
+            --push
 
-      - name: Start server with test and timeout
+      - name: Listar pasta build
         run: |
-            docker run --rm --env-file .env meu-app sh -c "
+          docker run --rm $DOCKER_USERNAME/segunda-entrega:latest ls -l /app/build
+
+      - name: Start server com timeout para teste
+        run: |
+          docker run --rm --env-file .env $DOCKER_USERNAME/segunda-entrega:latest sh -c "
             timeout 20s sh -c 'npm start & sleep 5'
-            "
+          "
