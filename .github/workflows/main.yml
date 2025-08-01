@@ -32,13 +32,10 @@ jobs:
 
       - name: Build e Push da imagem
         run: |
-          docker buildx build ./Dockerfile \
-            -t $DOCKER_USERNAME/segunda-entrega:latest \
-            --push
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+          docker buildx build -f ../../Dockerfile -t $DOCKER_USERNAME/segunda-entrega:latest --push
 
-      - name: Listar pasta build
-        run: |
-          docker run --rm $DOCKER_USERNAME/segunda-entrega:latest ls -l /app/build
+
 
       - name: Start server com timeout para teste
         run: |
