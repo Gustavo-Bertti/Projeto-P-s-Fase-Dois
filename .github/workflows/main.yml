@@ -20,8 +20,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker build -t $DOCKER_USERNAME/segunda-entrega:latest .
-          docker push $DOCKER_USERNAME/segunda-entrega:latest
+          docker buildx build -t $DOCKER_USERNAME/segunda-entrega:latest . --push
 
       - name: Criar arquivo .env a partir dos Secrets
         run: |
