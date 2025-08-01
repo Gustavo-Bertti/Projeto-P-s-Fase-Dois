@@ -3,15 +3,14 @@ import 'dotenv/config'
 import { z } from 'zod'
 
 const envSchema = z.object({
-  NODE_ENV: z
-    .enum(['development', 'production', 'test'])
-    .default('development'),
+  ENV: z.enum(['development', 'production', 'test']).default('development'),
   PORT: z.coerce.number().default(3000),
-  DATABASE_HOST: z.string().default('localhost'),
-  DATABASE_PORT: z.coerce.number().default(5432),
-  DATABASE_USER: z.string().default('postgres'),
-  DATABASE_PASSWORD: z.string().default('postgres'),
-  DATABASE_NAME: z.string().default('projeto_segundo_modulo'),
+  DB_HOST: z.string().default('localhost'),
+  DB_PORT: z.coerce.number().default(5432),
+  DB_USER: z.string().default('postgres'),
+  DB_PASSWORD: z.string().default('postgres'),
+  DB_NAME: z.string().default('projeto_segundo_modulo'),
+  DB_SSL: z.enum(['disable', 'require']).default('disable'),
 })
 
 const _env = envSchema.safeParse(process.env)
