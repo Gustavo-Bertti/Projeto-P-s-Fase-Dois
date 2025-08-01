@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "tsx watch src/server.ts",
+    "build": "tsup src/server.ts src/test-ci.ts --out-dir build",
     "start": "node build/server.js",
-    "build": "tsup src --out-dir build",
-    "test-ci": "tsx src/test-ci.ts"
+    "test-ci": "node build/test-ci.js"
   },
   "keywords": [],
   "author": "",

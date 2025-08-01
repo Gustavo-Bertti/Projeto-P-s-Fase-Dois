@@ -11,7 +11,7 @@ export const appDataSource = new DataSource({
     username: env.DB_USER,
     password: env.DB_PASSWORD,
     database: env.DB_NAME,
-    ssl: env.DB_SSL === 'require' ? true : false,
+    ssl: env.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
     entities:[Postagem,Usuario,Tipo],
     logging: env.ENV === 'development',
 })
