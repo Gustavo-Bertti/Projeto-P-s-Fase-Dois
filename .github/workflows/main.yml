@@ -30,7 +30,7 @@ jobs:
       - name: Build e Push da imagem
         run: |
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-          docker buildx build -f ../../Dockerfile -t $DOCKER_USERNAME/segunda-entrega:latest --push ../../
+          docker buildx build -f Dockerfile -t $DOCKER_USERNAME/segunda-entrega:latest --push .
 
 
 
