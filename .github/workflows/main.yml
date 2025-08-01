@@ -32,7 +32,7 @@ jobs:
 
       - name: Build e Push da imagem
         run: |
-          docker buildx build . \
+          docker buildx build ./Dockerfile \
             -t $DOCKER_USERNAME/segunda-entrega:latest \
             --push
 
