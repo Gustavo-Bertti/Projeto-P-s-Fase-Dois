@@ -25,6 +25,10 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t meu-app .
+        
+      - name: List build folder
+        run: |
+          docker run --rm meu-app ls -l /app/build
 
       - name: Start server with test and timeout
         run: |

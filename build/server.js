@@ -209,6 +209,7 @@ var appDataSource = new import_typeorm4.DataSource({
   username: env.DB_USER,
   password: env.DB_PASSWORD,
   database: env.DB_NAME,
+  ssl: env.DB_SSL === "require" ? { rejectUnauthorized: false } : void 0,
   entities: [Postagem, Usuario, Tipo],
   logging: env.ENV === "development"
 });
