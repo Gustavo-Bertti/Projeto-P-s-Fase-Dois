@@ -12,7 +12,4 @@ export async function postagemRoutes(app:FastifyInstance) {
     app.get('/postagem/:id', findById)
     app.post('/postagem', create)
     app.put('/postagem/:id',update)
-    app.get('/posts', findAllSemFiltro);
-    app.get("/postagem/search", search)
-    app.delete("/postagem/:id", remove)
 }
