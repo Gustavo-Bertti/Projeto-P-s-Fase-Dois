@@ -37,4 +37,30 @@ export class PostagemRepository implements IPostagemRepository {
         Object.assign(existingPostagem, postagem);
         return await this.repository.save(existingPostagem);
     }
+    async findAllWithoutFilter(page: number, limit: number): Promise<IPostagem[]> {
+    return await this.repository.find({
+        relations: ['usuario'],
+        skip: (page - 1) * limit,
+        take: limit,
+        order: { dataCriacao: "DESC" }
+    });
+    }
+
+    async delete(id: string): Promise<boolean> {
+        const repo = appDataSource.getRepository(Postagem);
+        const result = await repo.delete(id);
+        return result.affected !== 0;
+    }
+    async searchByNome(termo: string): Promise<IPostagem[]> {
+    const repo = appDataSource.getRepository(Postagem);
+    return repo.find({
+    where: [
+        { titulo: this.repository(`%${termo}%`) },
+        { conteudo: this.repository(`%${termo}%`) }
+    ],
+    order: { dataCriacao: "DESC" }
+    });
+    }
+
 }
+
