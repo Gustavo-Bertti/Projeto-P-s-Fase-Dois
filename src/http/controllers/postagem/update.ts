@@ -21,7 +21,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
     const updatePostagemUseCase = makeUpdatePostagemUseCase();
 
-    const updatedPostagem = await updatePostagemUseCase.handler(postagemId, { titulo, conteudo, ativo });
+    const updatedPostagem = await updatePostagemUseCase.handler(postagemId, { titulo, conteudo, ativo, dataAtualizacao: new Date() });
 
     return reply.status(200).send(updatedPostagem);
 }
