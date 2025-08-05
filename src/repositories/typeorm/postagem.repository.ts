@@ -1,8 +1,9 @@
 import { IPostagem } from "@/entities/model/postagem.interface";
 import { IPostagemRepository } from "../postagem.repository.interface";
-import { Repository } from "typeorm";
+import { Repository, ILike } from "typeorm";
 import { Postagem } from "@/entities/postagem.entity";
 import { appDataSource } from "@/lib/typeorm/typeorm";
+
 
 export class PostagemRepository implements IPostagemRepository {
 
@@ -53,13 +54,14 @@ export class PostagemRepository implements IPostagemRepository {
     }
     async searchByNome(termo: string): Promise<IPostagem[]> {
     const repo = appDataSource.getRepository(Postagem);
-    return repo.find({
-    where: [
-        { titulo: this.repository(`%${termo}%`) },
-        { conteudo: this.repository(`%${termo}%`) }
-    ],
-    order: { dataCriacao: "DESC" }
-    });
+
+    return repo.createQueryBuilder('postagem')
+        .leftJoinAndSelect('postagem.usuario', 'usuario')
+        .leftJoinAndSelect('usuario.idTipo', 'idTipo')
+        .where('postagem.titulo ILIKE :termo', { termo: `%${termo}%` })
+        .orWhere('postagem.conteudo ILIKE :termo', { termo: `%${termo}%` })
+        .orderBy('postagem.dataCriacao', 'DESC')
+        .getMany();
     }
 
 }

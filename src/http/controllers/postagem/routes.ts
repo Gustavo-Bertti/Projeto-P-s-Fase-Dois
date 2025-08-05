@@ -263,61 +263,61 @@ export async function postagemRoutes(app: FastifyInstance) {
     },
   }, remove);
 
-  app.get('/postagem/search', {
+    app.get('/postagem/search', {
     schema: {
-      tags: ['Postagem'],
-      summary: 'Buscar postagens por termo no título ou conteúdo',
-      querystring: {
+        tags: ['Postagem'],
+        summary: 'Buscar postagens por termo no título ou conteúdo',
+        querystring: {
         type: 'object',
         required: ['termo'],
         properties: {
-          termo: { type: 'string' },
+            termo: {
+            type: 'string',
+            description: 'Palavra ou parte da palavra a ser buscada no título ou conteúdo',
+            example: 'tes'
+            },
         },
-      },
-      response: {
+        },
+        response: {
         200: {
-          type: 'array',
-          items: {
+            description: 'Lista de postagens encontradas',
+            type: 'array',
+            items: {
             type: 'object',
             properties: {
-              titulo: { type: 'string' },
-              conteudo: { type: 'string' },
-              usuario: {
+                id: { type: 'string', format: 'uuid' },
+                titulo: { type: 'string' },
+                conteudo: { type: 'string' },
+                dataCriacao: { type: 'string', format: 'date-time' },
+                dataAtualizacao: { type: 'string', format: 'date-time' },
+                ativo: { type: 'boolean' },
+                idUsuario: { type: 'string', format: 'uuid' },
+                usuario: {
                 type: 'object',
                 properties: {
-                  nome: { type: 'string' },
-                  email: { type: 'string' },
-                  id: { type: 'string', format: 'uuid' },
-                  idTipo: {
+                    id: { type: 'string', format: 'uuid' },
+                    nome: { type: 'string' },
+                    email: { type: 'string' },
+                    idTipo: {
                     type: 'object',
                     properties: {
-                      nome: { type: 'string' },
-                      id: { type: 'number' },
-                    },
-                  },
-                },
-              },
-              id: { type: 'string', format: 'uuid' },
-              dataCriacao: { type: 'string', format: 'date-time' },
-              dataAtualizacao: { type: 'string', format: 'date-time' },
-              ativo: { type: 'boolean' },
-              idUsuario: { type: 'string', format: 'uuid' },
+                        id: { type: 'number' },
+                        nome: { type: 'string' }
+                    }
+                    }
+                }
+                }
             },
             required: [
-              'titulo',
-              'conteudo',
-              'usuario',
-              'id',
-              'dataCriacao',
-              'dataAtualizacao',
-              'ativo',
-              'idUsuario',
-            ],
-          },
-        },
-      },
-    },
-  }, search);
+                'id', 'titulo', 'conteudo', 'dataCriacao', 'dataAtualizacao',
+                'ativo', 'idUsuario', 'usuario'
+            ]
+            }
+        }
+        }
+    }
+    }, search);
+
   app.get('/postagem/sem-filtro', {
     schema: {
       tags: ['Postagem'],
