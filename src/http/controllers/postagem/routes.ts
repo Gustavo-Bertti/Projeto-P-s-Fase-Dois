@@ -12,6 +12,13 @@ export async function postagemRoutes(app: FastifyInstance) {
         schema: {
             tags: ['Postagem'],
             summary: 'Listar todos posts ativos para os alunos',
+            querystring: {
+                type: 'object',
+                properties: {
+                    page: { type: 'number', default: 1 },
+                    limit: { type: 'number', default: 10 }
+                }
+            },
             response: {
                 200: {
                     type: 'array',
@@ -227,9 +234,6 @@ export async function postagemRoutes(app: FastifyInstance) {
             },
         },
     }, update);
-
-
-
 
     app.delete('/postagem/:id', {
         schema: {
