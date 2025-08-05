@@ -8,7 +8,7 @@ import { Usuario } from "./usuario.entity"
 export class Postagem implements IPostagem {
   @PrimaryGeneratedColumn("uuid", { name: "idpostagem" })
   id?: string
-  
+
   @Column({
     name: "titulo",
     type: "varchar",
@@ -35,10 +35,9 @@ export class Postagem implements IPostagem {
   @Column({
     name: "dataatualizacao",
     type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
     onUpdate: "CURRENT_TIMESTAMP",
     nullable: true
-  })  
+  })
   dataAtualizacao?: Date
 
   @Column({
@@ -49,25 +48,25 @@ export class Postagem implements IPostagem {
   })
   ativo?: boolean
 
-@ManyToOne(() => Usuario, usuario => usuario.postagens, { nullable: false, eager: true, onDelete: "CASCADE" })
-@JoinColumn({ name: "idusuario" }) 
-usuario: Usuario;
+  @ManyToOne(() => Usuario, usuario => usuario.postagens, { nullable: false, eager: true, onDelete: "CASCADE" })
+  @JoinColumn({ name: "idusuario" })
+  usuario: Usuario;
 
-@Column({ name: "idusuario", type: "uuid" })
-idUsuario: string;
+  @Column({ name: "idusuario", type: "uuid" })
+  idUsuario: string;
 
 
   constructor(
-  titulo: string,
-  conteudo: string,
-  usuario: Usuario | string,
-) {
-  this.titulo = titulo
-  this.conteudo = conteudo
-  if (typeof usuario === "string") {
-    this.idUsuario = usuario
-  } else {
-    this.usuario = usuario
+    titulo: string,
+    conteudo: string,
+    usuario: Usuario | string,
+  ) {
+    this.titulo = titulo
+    this.conteudo = conteudo
+    if (typeof usuario === "string") {
+      this.idUsuario = usuario
+    } else {
+      this.usuario = usuario
+    }
   }
-}
 }
