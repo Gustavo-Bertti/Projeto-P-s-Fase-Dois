@@ -180,59 +180,34 @@ export async function postagemRoutes(app: FastifyInstance) {
                     id: { type: 'string', format: 'uuid' },
                 },
             },
-            body: {
-                type: 'object',
-                properties: {
-                    titulo: { type: 'string' },
-                    conteudo: { type: 'string' },
-                    ativo: { type: 'boolean' },
-                },
-                required: ['titulo', 'conteudo'],
-            },
-            response: {
-                200: {
-                    type: 'object',
-                    properties: {
-                        titulo: { type: 'string' },
-                        conteudo: { type: 'string' },
-                        usuario: {
-                            type: 'object',
-                            properties: {
-                                nome: { type: 'string' },
-                                email: { type: 'string' },
-                                id: { type: 'string', format: 'uuid' },
-                                idTipo: {
-                                    type: 'object',
-                                    properties: {
-                                        nome: { type: 'string' },
-                                        id: { type: 'number' },
-                                    },
-                                },
-                            },
-                        },
-                        id: { type: 'string', format: 'uuid' },
-                        dataCriacao: { type: 'string', format: 'date-time' },
-                        dataAtualizacao: { type: 'string', format: 'date-time' },
-                        ativo: { type: 'boolean' },
-                        idUsuario: { type: 'string', format: 'uuid' },
-                    },
-                },
-                404: {
-                    type: 'object',
-                    properties: {
-                        message: { type: 'string' },
-                    },
-                    example: { message: 'Postagem não encontrada' },
-                },
-            },
+
+            id: { type: 'string', format: 'uuid' },
+            dataCriacao: { type: 'string', format: 'date-time' },
+            dataAtualizacao: { type: 'string', format: 'date-time' },
+            ativo: { type: 'boolean' },
+            idUsuario: { type: 'string', format: 'uuid' },
+          },
         },
-    }, update);
+        404: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+          },
+          example: { message: 'Postagem não encontrada' },
+        },
+      },
+    },
+  }, update);
+
+
+   
 
     app.delete('/postagem/:id', {
         schema: {
             tags: ['Postagem'],
             summary: 'Deletar uma postagem pelo ID',
             params: {
+
                 type: 'object',
                 required: ['id'],
                 properties: {
