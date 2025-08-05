@@ -1,15 +1,25 @@
 import request from "supertest";
 import { app } from "@/app";
+import { appDataSource } from "@/lib/typeorm/typeorm";
 
-describe("DELETE /postagens/:id", () => {
+beforeAll(async () => {
+  await appDataSource.initialize();
+  await app.ready();
+});
+
+afterAll(async () => {
+  await appDataSource.destroy();
+  await app.close();
+});
+describe("DELETE /postagem/:id", () => {
   it("deve excluir uma postagem", async () => {
-    const postagemCriada = await request(app.server).post("/postagens").send({
+    const postagemCriada = await request(app.server).post("/postagem").send({
       titulo: "Para deletar",
       conteudo: "Vai ser excluída",
-      usuarioId: "1"
+      idUsuario: "f8e5b236-06da-4d17-91e8-125510e8d91c"
     });
 
-    const res = await request(app.server).delete(`/postagens/${postagemCriada.body.id}`);
+    const res = await request(app.server).delete(`/postagem/${postagemCriada.body.id}`);
 
     expect(res.status).toBe(204);
   });

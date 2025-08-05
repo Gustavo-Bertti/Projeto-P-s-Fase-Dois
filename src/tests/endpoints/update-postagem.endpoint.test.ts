@@ -1,22 +1,33 @@
 import request from "supertest";
 import { app } from "@/app";
+import { appDataSource } from "@/lib/typeorm/typeorm";
 
-describe("PUT /postagens/:id", () => {
+beforeAll(async () => {
+  await appDataSource.initialize();
+  await app.ready();
+});
+
+afterAll(async () => {
+  await appDataSource.destroy();
+  await app.close();
+});
+describe("PUT /postagem/:id", () => {
   it("deve atualizar uma postagem existente", async () => {
-    const postagemCriada = await request(app.server).post("/postagens").send({
+    const postagemCriada = await request(app.server).post("/postagem").send({
       titulo: "Original",
       conteudo: "Original",
-      usuarioId: "1"
+      idUsuario: "f8e5b236-06da-4d17-91e8-125510e8d91c"
     });
 
     const atualizacao = {
       titulo: "Atualizado",
       conteudo: "Novo conteúdo",
-      usuarioId: "1"
+      idUsuario: "f8e5b236-06da-4d17-91e8-125510e8d91c",
+      ativo: false
     };
 
     const res = await request(app.server)
-      .put(`/postagens/${postagemCriada.body.id}`)
+      .put(`/postagem/${postagemCriada.body.id}`)
       .send(atualizacao);
 
     expect(res.status).toBe(200);

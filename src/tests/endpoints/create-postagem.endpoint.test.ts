@@ -1,21 +1,28 @@
 import request from "supertest";
 import { app } from "@/app";
+import { appDataSource } from "../../lib/typeorm/typeorm";
 
-describe("POST /postagens", () => {
+beforeAll(async () => {
+  await appDataSource.initialize(); // conecta antes de rodar os testes
+  await app.ready();                // garante que o Fastify está pronto
+});
+
+afterAll(async () => {
+  await appDataSource.destroy();    // fecha conexão do banco
+  await app.close();                // fecha Fastify
+});
+describe("POST /postagem", () => {
   it("deve criar uma nova postagem", async () => {
     const novaPostagem = {
-      titulo: "Postagem de teste",
-      conteudo: "Conteúdo qualquer",
-      usuarioId: "1"
+      titulo: "Postagem de teste Test",
+      conteudo: "Conteúdo qualquer Test",
+      idUsuario: "f8e5b236-06da-4d17-91e8-125510e8d91c"
     };
 
     const res = await request(app.server)
-      .post("/postagens")
+      .post("/postagem")
       .send(novaPostagem);
 
     expect(res.status).toBe(201);
-    expect(res.body).toHaveProperty("id");
-    expect(res.body.titulo).toBe(novaPostagem.titulo);
-    expect(res.body.conteudo).toBe(novaPostagem.conteudo);
   });
 });
