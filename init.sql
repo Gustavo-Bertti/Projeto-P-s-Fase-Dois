@@ -9,6 +9,7 @@ CREATE TABLE Usuario (
     IdUsuario UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     Nome VARCHAR(100) NOT NULL,
     Email VARCHAR(150) UNIQUE NOT NULL,
+    Senha VARCHAR(255) NOT NULL,
     IdTipo INTEGER NOT NULL,
     FOREIGN KEY (IdTipo) REFERENCES Tipo(IdTipo)
 );
@@ -28,10 +29,3 @@ INSERT INTO Tipo (Nome) VALUES ('PROFESSOR')
 INSERT INTO Tipo (Nome) VALUES ('ALUNO')
     ON CONFLICT DO NOTHING;
 
-INSERT INTO Usuario (Nome, Email, IdTipo)
-VALUES (
-    'João Silva',
-    'joao.silva@example.com',
-    (SELECT IdTipo FROM Tipo WHERE Nome = 'PROFESSOR')
-)
-ON CONFLICT (Email) DO NOTHING;

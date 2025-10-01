@@ -25,18 +25,26 @@ export class Usuario implements IUsuario {
     nullable: false
   })
   email: string
-  
-  @ManyToOne(() => Tipo, tipo => tipo.usuarios, { 
-      nullable: false, 
-      eager: true,     
-      onDelete: "CASCADE" 
-    })
-    @JoinColumn({ name: "idtipo" }) 
-    idTipo: number; 
+
+  @Column({
+    name: "senha",
+    type: "varchar",
+    length: 255,
+    nullable: false
+  })
+  senha: string
+
+  @ManyToOne(() => Tipo, tipo => tipo.usuarios, {
+    nullable: false,
+    eager: true,
+    onDelete: "CASCADE"
+  })
+  @JoinColumn({ name: "idtipo" })
+  idTipo: number;
 
 
-    @OneToMany(() => Postagem, postagem => postagem.idUsuario)
-    postagens: Postagem[];
+  @OneToMany(() => Postagem, postagem => postagem.idUsuario)
+  postagens: Postagem[];
 
   constructor(nome: string, email: string, tipo: Tipo) {
     this.nome = nome
