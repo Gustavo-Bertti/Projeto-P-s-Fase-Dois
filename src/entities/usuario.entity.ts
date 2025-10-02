@@ -40,6 +40,9 @@ export class Usuario implements IUsuario {
     onDelete: "CASCADE"
   })
   @JoinColumn({ name: "idtipo" })
+  Tipo: Tipo;
+
+  @Column({ name: "idtipo", type: "int" })
   idTipo: number;
 
 
