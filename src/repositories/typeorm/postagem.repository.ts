@@ -7,17 +7,17 @@ import { appDataSource } from "@/lib/typeorm/typeorm";
 
 export class PostagemRepository implements IPostagemRepository {
 
-    private repository:Repository<Postagem>;
+    private repository: Repository<Postagem>;
 
-    constructor () {
+    constructor() {
         this.repository = appDataSource.getRepository(Postagem);
     }
     async findByAllPosts(page: number, limit: number): Promise<IPostagem[]> {
         return await this.repository.find({
-            relations:['usuario'],
+            relations: ['usuario'],
             skip: (page - 1) * limit,
             take: limit,
-            where:{ativo:true}
+            where: { ativo: true }
         })
     }
     async findById(id: string): Promise<IPostagem | null> {
@@ -27,7 +27,10 @@ export class PostagemRepository implements IPostagemRepository {
         });
     }
     async create(postagem: IPostagem): Promise<IPostagem> {
-       return await this.repository.save(postagem);
+        if (!postagem.dataCriacao) {
+            delete postagem.dataCriacao;
+        }
+        return await this.repository.save(postagem);
     }
 
     async update(id: string, postagem: IPostagem): Promise<IPostagem | null> {
@@ -39,12 +42,12 @@ export class PostagemRepository implements IPostagemRepository {
         return await this.repository.save(existingPostagem);
     }
     async findAllWithoutFilter(page: number, limit: number): Promise<IPostagem[]> {
-    return await this.repository.find({
-        relations: ['usuario'],
-        skip: (page - 1) * limit,
-        take: limit,
-        order: { dataCriacao: "DESC" }
-    });
+        return await this.repository.find({
+            relations: ['usuario'],
+            skip: (page - 1) * limit,
+            take: limit,
+            order: { dataCriacao: "DESC" }
+        });
     }
 
     async delete(id: string): Promise<boolean> {
@@ -53,15 +56,15 @@ export class PostagemRepository implements IPostagemRepository {
         return result.affected !== 0;
     }
     async searchByNome(termo: string): Promise<IPostagem[]> {
-    const repo = appDataSource.getRepository(Postagem);
+        const repo = appDataSource.getRepository(Postagem);
 
-    return repo.createQueryBuilder('postagem')
-        .leftJoinAndSelect('postagem.usuario', 'usuario')
-        .leftJoinAndSelect('usuario.idTipo', 'idTipo')
-        .where('postagem.titulo ILIKE :termo', { termo: `%${termo}%` })
-        .orWhere('postagem.conteudo ILIKE :termo', { termo: `%${termo}%` })
-        .orderBy('postagem.dataCriacao', 'DESC')
-        .getMany();
+        return repo.createQueryBuilder('postagem')
+            .leftJoinAndSelect('postagem.usuario', 'usuario')
+            .leftJoinAndSelect('usuario.idTipo', 'idTipo')
+            .where('postagem.titulo ILIKE :termo', { termo: `%${termo}%` })
+            .orWhere('postagem.conteudo ILIKE :termo', { termo: `%${termo}%` })
+            .orderBy('postagem.dataCriacao', 'DESC')
+            .getMany();
     }
 
 }

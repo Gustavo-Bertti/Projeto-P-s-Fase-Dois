@@ -15,8 +15,11 @@ export class UsuarioRepository implements IUsuarioRepository {
         return await this.repository.save(usuario);
     }
 
-    async login(email: string, senha: string): Promise<string | null> {
+    async login(email: string, senha: string): Promise<{ idUsuario?: string, idTipo?: number } | null> {
         const user = await this.repository.findOne({ where: { email, senha } });
-        return user?.id || null;
+        if (user)
+            return { idUsuario: user?.id, idTipo: user?.idTipo }
+
+        return null;
     }
 }
