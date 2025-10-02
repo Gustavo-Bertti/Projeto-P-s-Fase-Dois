@@ -53,7 +53,14 @@ export async function usuarioRoutes(app: FastifyInstance) {
                 200: {
                     type: 'object',
                     properties: {
-                        token: { type: 'string' },
+                        token: {
+                            type: 'object',
+                            properties: {
+                                idUsuario: { type: 'string' },
+                                idTipo: { type: 'number' }
+                            },
+                            required: ['idUsuario', 'idTipo']
+                        }
                     },
                     required: ['token'],
                 },
