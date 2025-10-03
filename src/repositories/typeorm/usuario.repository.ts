@@ -18,7 +18,7 @@ export class UsuarioRepository implements IUsuarioRepository {
     async login(email: string, senha: string): Promise<{ idUsuario?: string, idTipo?: number } | null> {
         const user = await this.repository.findOne({ where: { email, senha } });
         if (user)
-            return { idUsuario: user?.id, idTipo: user?.Tipo.id };
+            return { idUsuario: user?.id, idTipo: user?.tipo.id };
         return null;
 
     }

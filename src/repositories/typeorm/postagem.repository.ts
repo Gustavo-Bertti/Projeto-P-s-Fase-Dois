@@ -60,7 +60,7 @@ export class PostagemRepository implements IPostagemRepository {
 
         return repo.createQueryBuilder('postagem')
             .leftJoinAndSelect('postagem.usuario', 'usuario')
-            .leftJoinAndSelect('usuario.idTipo', 'idTipo')
+            .leftJoinAndSelect('usuario.tipo', 'tipo')  // Corrigido aqui
             .where('postagem.titulo ILIKE :termo', { termo: `%${termo}%` })
             .orWhere('postagem.conteudo ILIKE :termo', { termo: `%${termo}%` })
             .orderBy('postagem.dataCriacao', 'DESC')
