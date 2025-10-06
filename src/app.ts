@@ -5,27 +5,33 @@ import { postagemRoutes } from '@/http/controllers/postagem/routes'
 import { globalErrorHandler } from '@/utils/global-error-handler'
 import fastifySwagger from '@fastify/swagger'
 import fastifySwaggerUi from '@fastify/swagger-ui'
+import { usuarioRoutes } from './http/controllers/usuario/routes'
 
 export const app = fastify()
-app.register(fastifySwagger,{
-    swagger: {
+app.register(fastifySwagger, {
+  swagger: {
     info: {
       title: 'Blog de Estudos',
       description: 'API para criação de um blog de estudos',
       version: '1.0.0',
     },
-    tags:[{
-        name: 'Postagem',
-        description: 'Gerenciamento de postagens',
-    }]
-},
+    tags: [{
+      name: 'Postagem',
+      description: 'Gerenciamento de postagens',
+    },
+    {
+      name: 'Usuario',
+      description: 'Gerenciamento de usuarios',
+    }],
+  },
 })
 app.register(fastifySwaggerUi, {
-    routePrefix: '/docs',
-    uiConfig: {
-      docExpansion: 'full',
-      deepLinking: false,
-    },
+  routePrefix: '/docs',
+  uiConfig: {
+    docExpansion: 'full',
+    deepLinking: false,
+  },
 })
 app.register(postagemRoutes)
+app.register(usuarioRoutes)
 app.setErrorHandler(globalErrorHandler);
