@@ -29,7 +29,7 @@ export class PostagemRepository implements IPostagemRepository {
     async findByUserId(idUsuario: string): Promise<IPostagem[]> {
         return await this.repository.find({
             where: { idUsuario },
-            relations: ["usuario"],
+            relations: ["usuario", "usuario.tipo"],
         });
     }
     async create(postagem: IPostagem): Promise<IPostagem> {
