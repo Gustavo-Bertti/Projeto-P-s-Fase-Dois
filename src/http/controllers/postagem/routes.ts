@@ -6,6 +6,7 @@ import { update } from "./update";
 import { remove } from "./delete";
 import { search } from "./search";
 import { findAllSemFiltro } from "./findAllSemFiltro";
+import { findByUserId } from "./findByUserId";
 
 export async function postagemRoutes(app: FastifyInstance) {
     app.get('/postagem', {
@@ -125,6 +126,34 @@ export async function postagemRoutes(app: FastifyInstance) {
             },
         },
     }, findById);
+        app.get("/postagem/usuario/:idUsuario", {
+        schema: {
+            tags: ["Postagem"],
+            summary: "Buscar postagens pelo ID do usuário",
+            params: {
+                type: "object",
+                required: ["idUsuario"],
+                properties: {
+                    idUsuario: { type: "string", format: "uuid" },
+                },
+            },
+            response: {
+                200: {
+                    type: "array",
+                    items: { type: "object" },
+                },
+                404: {
+                    type: "object",
+                    properties: {
+                        message: { type: "string" },
+                    },
+                    example: {
+                        message: "Nenhuma postagem encontrada para este usuário",
+                    },
+                },
+            },
+        },
+    }, findByUserId);
 
     app.post('/postagem', {
         schema: {

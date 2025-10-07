@@ -8,4 +8,5 @@ export interface IPostagemRepository {
     findAllWithoutFilter(page: number, limit: number): Promise<IPostagem[]>;
     delete(id: string): Promise<boolean>;
     searchByNome(termo: string): Promise<IPostagem[]>;
+    findByUserId(idUsuario: string): Promise<IPostagem[]>;
 }
