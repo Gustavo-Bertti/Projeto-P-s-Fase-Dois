@@ -140,7 +140,43 @@ export async function postagemRoutes(app: FastifyInstance) {
             response: {
                 200: {
                     type: "array",
-                    items: { type: "object" },
+                    items: {
+                        type: "object",
+                        properties: {
+                            titulo: { type: "string" },
+                            conteudo: { type: "string" },
+                            usuario: {
+                                type: "object",
+                                properties: {
+                                    nome: { type: "string" },
+                                    email: { type: "string" },
+                                    id: { type: "string", format: "uuid" },
+                                    idTipo: {
+                                        type: "object",
+                                        properties: {
+                                            nome: { type: "string" },
+                                            id: { type: "number" },
+                                        },
+                                    },
+                                },
+                            },
+                            id: { type: "string", format: "uuid" },
+                            dataCriacao: { type: "string", format: "date-time" },
+                            dataAtualizacao: { type: "string", format: "date-time" },
+                            ativo: { type: "boolean" },
+                            idUsuario: { type: "string", format: "uuid" },
+                        },
+                        required: [
+                            "titulo",
+                            "conteudo",
+                            "usuario",
+                            "id",
+                            "dataCriacao",
+                            "dataAtualizacao",
+                            "ativo",
+                            "idUsuario",
+                        ],
+                    },
                 },
                 404: {
                     type: "object",

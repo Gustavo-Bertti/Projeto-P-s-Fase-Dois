@@ -29,9 +29,11 @@ export class PostagemRepository implements IPostagemRepository {
     async findByUserId(idUsuario: string): Promise<IPostagem[]> {
         return await this.repository.find({
             where: { idUsuario },
-            relations: ["usuario", "usuario.tipo"],
+            relations: ["usuario"],
+            order: { dataCriacao: "DESC" },
         });
     }
+    
     async create(postagem: IPostagem): Promise<IPostagem> {
         if (!postagem.dataCriacao) {
             delete postagem.dataCriacao;
